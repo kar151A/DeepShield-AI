@@ -11,20 +11,42 @@ def predict_fake(path):
             "details": "Invalid image"
         }
 
-    # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # Calculate variance (blur detection)
-    variance = cv2.Laplacian(gray, cv2.CV_64F).var()
+    # Load face detector
+    face_cascade = cv2.CascadeClassifier(
+        "C:\\Users\\karthik\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\cv2\\data\\haarcascade_frontalface_default.xml"
+    )
 
-    # Heuristic logic
-    if variance < 100:
-        prediction = "FAKE"
-    else:
-        prediction = "REAL"
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+    # Draw rectangles
+    for (x, y, w, h) in faces:
+        face = gray[y:y+h, x:x+w]
+
+        # check sharpness in face
+        variance = cv2.Laplacian(face, cv2.CV_64F).var()
+
+        if variance < 100:
+            label = "FAKE"
+            color = (0, 0, 255)
+        else:
+            label = "REAL"
+            color = (0, 255, 0)
+
+        cv2.rectangle(img, (x, y), (x+w, y+h), color, 2)
+        cv2.putText(img, label, (x, y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
+
+    output_path = "output.jpg"
+    cv2.imwrite(output_path, img)
+
+    # If no faces detected → suspicious
+    prediction = "FAKE" if len(faces) == 0 else "REAL"
 
     return {
         "prediction": prediction,
-        "confidence": round(min(variance, 100), 2),
-        "details": f"Image sharpness score: {variance:.2f}"
+        "confidence": 85,
+        "details": f"Faces detected: {len(faces)}",
+        "output_image": output_path
     }

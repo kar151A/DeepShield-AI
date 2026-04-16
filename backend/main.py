@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 import shutil
 from model import predict_fake
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
