@@ -1,11 +1,23 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile
+from fastapi.staticfiles import StaticFiles
 import shutil
 from model import predict_fake
-from fastapi.responses import FileResponse
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # allow all (important)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+app.mount("/static", StaticFiles(directory="."), name="static")
 @app.get("/")
+
+
+
 def home():
     return {"message": "DeepShield AI Backend Running"}
 
