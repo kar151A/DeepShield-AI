@@ -27,25 +27,79 @@ function App() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>🛡️ DeepShield AI</h1>
+  <div style={{
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white",
+    fontFamily: "Arial"
+  }}>
+    <h1 style={{ fontSize: "42px", marginBottom: "10px" }}>
+      🛡️ DeepShield AI
+    </h1>
 
-      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-      <br /><br />
+    <p style={{ color: "#94a3b8" }}>
+      Detect Fake / Manipulated Images using AI
+    </p>
 
-      <button onClick={handleUpload}>Analyze</button>
+    <div style={{
+      marginTop: "30px",
+      padding: "30px",
+      background: "#1e293b",
+      borderRadius: "12px",
+      boxShadow: "0px 10px 30px rgba(0,0,0,0.5)"
+    }}>
+      <input
+        type="file"
+        onChange={(e) => setFile(e.target.files[0])}
+        style={{ marginBottom: "20px" }}
+      />
 
-      {result && (
-        <div style={{ marginTop: "20px" }}>
-          <h2>{result.prediction}</h2>
-          <p>Confidence: {result.confidence}</p>
-          <p>{result.details}</p>
+      <br />
 
-          <img src={imageUrl} alt="result" width="300" />
-        </div>
-      )}
+      <button
+        onClick={handleUpload}
+        style={{
+          padding: "10px 20px",
+          background: "#22c55e",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer",
+          fontSize: "16px"
+        }}
+      >
+        Analyze Image
+      </button>
     </div>
-  );
+
+    {result && (
+      <div style={{ marginTop: "30px", textAlign: "center" }}>
+        <h2 style={{
+          color: result.prediction === "FAKE" ? "red" : "lightgreen"
+        }}>
+          {result.prediction}
+        </h2>
+
+        <p>Confidence: {result.confidence}</p>
+        <p>{result.details}</p>
+
+        <img
+          src={imageUrl}
+          alt="result"
+          width="350"
+          style={{
+            marginTop: "20px",
+            borderRadius: "10px",
+            border: "2px solid #334155"
+          }}
+        />
+      </div>
+    )}
+  </div>
+);
 }
 
 export default App;
