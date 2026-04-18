@@ -28,7 +28,7 @@ function App() {
     console.error(error);
     alert("Error connecting to backend");
   } finally {
-    setLoading(false); // 🔥 STOP LOADING
+    setLoading(true); // 🔥 STOP LOADING
   }
 };
 
@@ -84,15 +84,23 @@ function App() {
     </div>
 
     {result && (
+
       <div style={{ marginTop: "30px", textAlign: "center" }}>
         <h2 style={{
-          color: result.prediction === "FAKE" ? "red" : "lightgreen"
-        }}>
-          {result.prediction}
-        </h2>
+  color: result.prediction === "FAKE" ? "#ef4444" : "#22c55e",
+  fontSize: "28px"
+}}>
+  {result.prediction}
+</h2>
 
         <p>Confidence: {result.confidence}</p>
+
         <p>{result.details}</p>
+        <p style={{ color: "#94a3b8", marginTop: "5px" }}>
+  {result.prediction === "FAKE"
+    ? "⚠️ This image shows signs of manipulation."
+    : "✅ This image appears authentic."}
+</p>
 
         <img
           src={imageUrl}
@@ -106,6 +114,7 @@ function App() {
         />
       </div>
     )}
+    
   </div>
 );
 }
