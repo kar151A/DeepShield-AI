@@ -2,29 +2,35 @@ import { useState } from "react";
 import axios from "axios";
 
 function App() {
+  
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a file first");
-      return;
-    }
+  if (!file) {
+    alert("Please select a file");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file);
 
-    try {
-      const res = await axios.post("http://localhost:8000/detect", formData);
-      setResult(res.data);
+  try {
+    setLoading(true); // 🔥 START LOADING
 
-      setImageUrl("http://localhost:8000/static/" + res.data.output_image);
-    } catch (error) {
-      console.error(error);
-      alert("Error connecting to backend");
-    }
-  };
+    const res = await axios.post("http://localhost:8000/detect", formData);
+
+    setResult(res.data);
+    setImageUrl("http://localhost:8000/static/" + res.data.output_image);
+
+  } catch (error) {
+    console.error(error);
+    alert("Error connecting to backend");
+  } finally {
+    setLoading(false); // 🔥 STOP LOADING
+  }
+};
 
   return (
   <div style={{
@@ -61,18 +67,20 @@ function App() {
       <br />
 
       <button
-        onClick={handleUpload}
-        style={{
-          padding: "10px 20px",
-          background: "#22c55e",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-          fontSize: "16px"
-        }}
-      >
-        Analyze Image
-      </button>
+  onClick={handleUpload}
+  disabled={loading}
+  style={{
+    padding: "10px 20px",
+    background: loading ? "gray" : "#22c55e",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "16px"
+  }}
+>
+  {loading ? "Processing..." : "Analyze Image"}
+</button>
+      {loading && <p style={{ marginTop: "10px" }}>Analyzing...</p>}
     </div>
 
     {result && (
