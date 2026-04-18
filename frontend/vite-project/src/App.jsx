@@ -28,7 +28,7 @@ function App() {
     console.error(error);
     alert("Error connecting to backend");
   } finally {
-    setLoading(true); // 🔥 STOP LOADING
+    setLoading(false); // 🔥 STOP LOADING
   }
 };
 
@@ -80,7 +80,10 @@ function App() {
 >
   {loading ? "Processing..." : "Analyze Image"}
 </button>
-      {loading && <p style={{ marginTop: "10px" }}>Analyzing...</p>}
+      {loading && <div className="loader"></div>
+      
+      }
+      
     </div>
 
     {result && (
